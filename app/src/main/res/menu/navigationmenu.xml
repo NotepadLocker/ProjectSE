@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    tools:ignore="MissingDefaultResource">
+
+    <item android:id="@+id/singout"
+        android:title="@string/singout" />
+
+    <item android:id="@+id/notes"
+        android:title="Note"/>
+</menu>

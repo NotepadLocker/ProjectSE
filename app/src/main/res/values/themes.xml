@@ -2,8 +2,8 @@
     <!-- Base application theme. -->
     <style name="Theme.NotepadLocker" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">@color/welcome</item>
+        <item name="colorPrimaryVariant">@color/welcome</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -15,20 +15,25 @@
     </style>
 
     <!--Login-->
-    <style name="PinkColor" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="LoginColor" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <item name="colorPrimary">@color/login</item>
+        <item name="android:statusBarColor">@color/login</item>
         <item name="colorSecondary">@color/login</item>
     </style>
 
     <!--Register-->
-    <style name="BlueColor" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="RegisterColor" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <item name="colorPrimary">@color/register</item>
+        <item name="android:statusBarColor">@color/register</item>
         <item name="colorSecondary">@color/register</item>
     </style>
 
     <!--Welcome Page-->
-    <style name="PurpleColor" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="WelcomePage" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <item name="colorPrimary">@color/welcome</item>
+        <item name="android:statusBarColor">@color/welcome</item>
+        <item name="colorSecondary">@color/welcome</item>
+        <item name="android:itemTextAppearance">@color/welcome</item>
     </style>
 
     <style name="Theme.NotepadLocker.NoActionBar">

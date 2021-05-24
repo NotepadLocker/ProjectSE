@@ -31,7 +31,6 @@ public class NoteEditor extends AppCompatActivity {
     EditText edttitle;
     String tittle = null;
     String user_input = null;
-    String b64 = null;
     int noteId;
 
     @Override
@@ -68,8 +67,8 @@ public class NoteEditor extends AppCompatActivity {
                 tittle = String.valueOf(s);
                 try {
                     String encrypted = AESCrypt.encrypt(user_id,tittle);
-                    DatabaseReference userData = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id).child("tittle");
-                    userData = userData.child(String.valueOf(noteId));
+                    DatabaseReference userData = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id).child("note");
+                    userData = userData.child("title").child(String.valueOf(noteId));
                     userData.setValue(encrypted);
                     NotepadActivity.tittle.set(noteId,String.valueOf(s));
                     NotepadActivity.arrayAdapter.notifyDataSetChanged();
@@ -93,7 +92,7 @@ public class NoteEditor extends AppCompatActivity {
                 try {
                     String encrypted = AESCrypt.encrypt(user_id,user_input);
                     DatabaseReference userData = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id).child("note");
-                    userData = userData.child(String.valueOf(noteId));
+                    userData = userData.child("notes").child(String.valueOf(noteId));
                     userData.setValue(encrypted);
                     NotepadActivity.notes.set(noteId,String.valueOf(s));
                 } catch (GeneralSecurityException e) {

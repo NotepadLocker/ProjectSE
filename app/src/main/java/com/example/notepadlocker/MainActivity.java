@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    TextView txtview;
     Button btnlogin,btnregister;
     static String user_id;
 
@@ -47,10 +46,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         SharedPreferences sharedPreferences = getSharedPreferences("Session",MODE_PRIVATE);
-        /**
-         * SharedPreferences Reset
-         */
-        //sharedPreferences.edit().clear().commit();
         Boolean counter = sharedPreferences.getBoolean("logincounter",Boolean.valueOf(String.valueOf(MODE_PRIVATE)));
         String uid = sharedPreferences.getString("userid",String.valueOf(MODE_PRIVATE));
         if(counter)

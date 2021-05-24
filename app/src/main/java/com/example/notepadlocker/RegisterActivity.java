@@ -113,7 +113,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     userdata.setValue(username);
                                     DatabaseReference usertype = FirebaseDatabase.getInstance().getReference().child("Users").child(uid).child("userdata");
                                     usertype = usertype.child("type");
-                                    usertype.setValue("free");
+                                    usertype.setValue("Free");
                                     Toasty.success(RegisterActivity.this, "Register Succesfully", Toast.LENGTH_SHORT).show();
                                     startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
                                 }

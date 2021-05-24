@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     Button loginBtn;
     FirebaseAuth fAuth;
     Switch swtch;
+    TextView forget;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         edtPassword = findViewById(R.id.edtpassword);
         loginBtn = findViewById(R.id.btnlog);
         swtch = findViewById(R.id.switchlog);
+        forget = findViewById(R.id.txtforget);
 
         fAuth = FirebaseAuth.getInstance();
 
@@ -74,7 +77,12 @@ public class LoginActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             Intent intent1 = new Intent(LoginActivity.this,NotepadActivity.class);
                             FirebaseUser user = fAuth.getCurrentUser();
-                            if(!user.isEmailVerified()){
+                            if(user == null){
+                                edtEmail.setText("");
+                                edtPassword.setText("");
+                                Toasty.error(LoginActivity.this,"Auth Failed",Toast.LENGTH_SHORT).show();
+                            }
+                            else if(!user.isEmailVerified()){
                                 Toasty.warning(LoginActivity.this, "Please Verify your Account", Toast.LENGTH_SHORT).show();
                             }
                             else if(task.isSuccessful()){
@@ -88,14 +96,17 @@ public class LoginActivity extends AppCompatActivity {
                                 intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent1);
                             }
-                            else{
-                                edtEmail.setText("");
-                                edtPassword.setText("");
-                                Toasty.error(LoginActivity.this,"Auth Failed",Toast.LENGTH_SHORT).show();
-                            }
                         }
                     });
                 }
+            }
+        });
+
+        forget.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this,ForgetPasswordActivity.class);
+                startActivity(intent);
             }
         });
     }

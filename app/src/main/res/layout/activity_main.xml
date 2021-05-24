@@ -19,71 +19,76 @@
         android:id="@+id/view8"
         android:layout_width="0dp"
         android:layout_height="75dp"
-        android:background="@drawable/ic_up"
+        android:background="@drawable/ic_top_welcome"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view7" />
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="99dp"
-        android:layout_height="105dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view8"
-        app:srcCompat="@drawable/ic_baseline_lock_242" />
 
     <View
         android:id="@+id/view9"
         android:layout_width="0dp"
         android:layout_height="150dp"
-        android:background="@drawable/ic_btm"
+        android:background="@drawable/ic_bottom_welcome"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="116dp"
+        android:layout_height="105dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view8"
+        app:srcCompat="@drawable/ic_logo_icon" />
+
     <TextView
-        android:id="@+id/textView3"
-        android:layout_width="148dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="16dp"
-        android:text="Welcome"
-        android:textAllCaps="true"
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:text="WELCOME"
         android:textColor="@color/welcome"
-        android:textSize="30sp"
+        android:textSize="34sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/btnlogin"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/btnscreen"
-        android:padding="16dp"
-        android:text="Login"
-        android:theme="@style/PurpleColor"
+        android:layout_marginTop="100dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <Button
-        android:id="@+id/btnregister"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/btnscreen"
-        android:padding="16dp"
-        android:text="Register"
-        android:theme="@style/PurpleColor"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnlogin" />
+        <Button
+            android:id="@+id/btnlogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/btnwelcomescreeen"
+            android:padding="16dp"
+            android:text="Login"
+            android:theme="@style/WelcomePage" />
+
+        <Button
+            android:id="@+id/btnregister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/btnwelcomescreeen"
+            android:padding="16dp"
+            android:text="Register"
+            android:theme="@style/WelcomePage" />
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

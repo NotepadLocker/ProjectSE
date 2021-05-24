@@ -4,38 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".NoteEditor">
-
-    <EditText
-        android:id="@+id/edtnoteeditor"
-        android:layout_width="370dp"
-        android:layout_height="633dp"
-        android:layout_marginTop="8dp"
-        android:background="@null"
-        android:ems="10"
-        android:gravity="start|top"
-        android:inputType="textMultiLine"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edttittle"
-        app:layout_constraintVertical_bias="1.0"
-        android:autofillHints="" />
-
-    <EditText
-        android:id="@+id/edttittle"
-        android:layout_width="412dp"
-        android:layout_height="42dp"
-        android:layout_marginEnd="4dp"
-        android:ems="10"
-        android:hint="@string/tittle"
-        android:inputType="textPersonName"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        android:autofillHints="" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -50,12 +20,42 @@
 
     <Button
         android:id="@+id/btnsave"
-        android:layout_width="95dp"
-        android:layout_height="54dp"
-        android:text="@string/save"
-        app:layout_constraintBottom_toTopOf="@+id/edtnoteeditor"
+        android:layout_width="94dp"
+        android:layout_height="55dp"
+        android:text="save"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        style="?android:attr/borderlessButtonStyle"/>
 
+    <EditText
+        android:id="@+id/edttittle"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_margin="15dp"
+        android:background="@drawable/borderregister"
+        android:ems="10"
+        android:hint="Title"
+        android:inputType="textPersonName"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <EditText
+        android:id="@+id/edtnoteeditor"
+        android:layout_width="0dp"
+        android:layout_height="600dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginHorizontal="20dp"
+        android:background="@color/white"
+        android:ems="10"
+        android:hint="Edit Here"
+        android:gravity="start|top"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edttittle" />
 </androidx.constraintlayout.widget.ConstraintLayout>
