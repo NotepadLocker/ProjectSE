@@ -3,9 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     tools:ignore="MissingDefaultResource">
 
-    <item android:id="@+id/singout"
-        android:title="@string/singout" />
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/notes"
+            android:title="Note"/>
 
-    <item android:id="@+id/notes"
-        android:title="Note"/>
+        <item android:id="@+id/recycle"
+            android:title="Recycle Bin" />
+
+        <item android:id="@+id/singout"
+            android:title="@string/singout" />
+    </group>
 </menu>

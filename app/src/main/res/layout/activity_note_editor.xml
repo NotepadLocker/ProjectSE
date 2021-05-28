@@ -30,7 +30,7 @@
         style="?android:attr/borderlessButtonStyle"/>
 
     <EditText
-        android:id="@+id/edttittle"
+        android:id="@+id/edttitle"
         android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_margin="15dp"
@@ -57,5 +57,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edttittle" />
+        app:layout_constraintTop_toBottomOf="@+id/edttitle" />
 </androidx.constraintlayout.widget.ConstraintLayout>
