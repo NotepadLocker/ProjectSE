@@ -1,12 +1,14 @@
 package com.example.notepadlocker;
 
 import android.content.Intent;
+import android.media.SyncParams;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.provider.ContactsContract;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -17,6 +19,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -33,6 +37,7 @@ import java.util.ArrayList;
 
 import es.dmoral.toasty.Toasty;
 
+import static android.content.Context.POWER_SERVICE;
 import static com.example.notepadlocker.MainActivity.user_id;
 
 /**
@@ -40,7 +45,7 @@ import static com.example.notepadlocker.MainActivity.user_id;
  * Use the {@link NoteFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class NoteFragment extends Fragment implements LockDialog.OnInputSelected,UnlockDialog.unlocking {
+public class NoteFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -82,13 +87,13 @@ public class NoteFragment extends Fragment implements LockDialog.OnInputSelected
         }
     }
 
-    static ArrayList<String> title = new ArrayList<>();
-    static ArrayList<String> note = new ArrayList<>();
-    static ArrayList<String> status = new ArrayList<>();
-    static ArrayList<String> lock = new ArrayList<>();
+    static ArrayList < String > title = new ArrayList < > ();
+    static ArrayList < String > note = new ArrayList < > ();
+    static ArrayList < String > status = new ArrayList < > ();
+    static ArrayList < String > lock = new ArrayList < > ();
     static ArrayAdapter arrayAdapter;
-    int notesToLock,positionx;
-    String lockpass,unlockPass;
+    int notesToLock;
+    int notesToDelete;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -106,12 +111,27 @@ public class NoteFragment extends Fragment implements LockDialog.OnInputSelected
 
         registerForContextMenu(listView);
 
+        SearchView searchView = view.findViewById(R.id.search);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                NoteFragment.this.arrayAdapter.getFilter().filter(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                NoteFragment.this.arrayAdapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+
         DatabaseReference userDataTitle = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id).child("note");
         userDataTitle.child("title").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 title.clear();
-                for (DataSnapshot ds : snapshot.getChildren()) {
+                for (DataSnapshot ds: snapshot.getChildren()) {
                     String value = ds.getValue(String.class);
                     String decode = null;
                     try {
@@ -137,7 +157,7 @@ public class NoteFragment extends Fragment implements LockDialog.OnInputSelected
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 note.clear();
-                for (DataSnapshot ds : snapshot.getChildren()) {
+                for (DataSnapshot ds: snapshot.getChildren()) {
                     String value = ds.getValue(String.class);
                     String decode = null;
                     try {
@@ -155,12 +175,12 @@ public class NoteFragment extends Fragment implements LockDialog.OnInputSelected
             }
         });
 
-        DatabaseReference userDataLock = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id).child("note");
-        userDataLock.child("lock").child("status").addValueEventListener(new ValueEventListener() {
+        DatabaseReference userDataLock = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id).child("note").child("lock");
+        userDataLock.child("status").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 status.clear();
-                for (DataSnapshot ds : snapshot.getChildren()) {
+                for (DataSnapshot ds: snapshot.getChildren()) {
                     status.add(ds.getValue(String.class));
                 }
             }
@@ -171,13 +191,20 @@ public class NoteFragment extends Fragment implements LockDialog.OnInputSelected
             }
         });
 
-        DatabaseReference userDataPassword = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id).child("note");
-        userDataPassword.child("lock").child("password").addValueEventListener(new ValueEventListener() {
+        DatabaseReference userDataPassword = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id).child("note").child("lock");
+        userDataPassword.child("password").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
                 lock.clear();
-                for (DataSnapshot ds : snapshot.getChildren()) {
-                    lock.add(ds.getValue(String.class));
+                for (DataSnapshot ds: snapshot.getChildren()) {
+                    String value = ds.getValue(String.class);
+                    String decode = null;
+                    try {
+                        decode = AESCrypt.decrypt(user_id, value);
+                        lock.add(decode);
+                    } catch (GeneralSecurityException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -197,22 +224,27 @@ public class NoteFragment extends Fragment implements LockDialog.OnInputSelected
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String condition = status.get(position);
-                if (condition.equals("unlocked")) {
+            public void onItemClick(AdapterView < ? > parent, View view, int position, long id) {
+                try {
+                    String condition = status.get(position);
+                    if (condition.equals("unlocked")) {
+                        Intent intent = new Intent(getActivity().getApplicationContext(), NoteEditor.class);
+                        intent.putExtra("notedId", position);
+                        startActivity(intent);
+                    } else {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("position", String.valueOf(position));
+                        UnlockDialog unlockDialog = new UnlockDialog();
+                        unlockDialog.setArguments(bundle);
+                        unlockDialog.show(getActivity().getSupportFragmentManager(), "UnlockDialog");
+                    }
+                } catch (Exception e) {
                     Intent intent = new Intent(getActivity().getApplicationContext(), NoteEditor.class);
                     intent.putExtra("notedId", position);
                     startActivity(intent);
-                }else {
-                    positionx = position;
-                    UnlockDialog unlockDialog = new UnlockDialog();
-                    unlockDialog.setTargetFragment(NoteFragment.this,1);
-                    unlockDialog.show(getActivity().getSupportFragmentManager(),"UnlockDialog");
                 }
             }
         });
-
-
         return view;
     }
 
@@ -229,68 +261,125 @@ public class NoteFragment extends Fragment implements LockDialog.OnInputSelected
         if (item.getItemId() == R.id.Lock) {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
             notesToLock = info.position;
+            System.out.println(notesToDelete);
+            Bundle bundle = new Bundle();
+            bundle.putString("position", String.valueOf(notesToLock));
             LockDialog lockDialog = new LockDialog();
-            lockDialog.setTargetFragment(NoteFragment.this,1);
-            lockDialog.show(getActivity().getSupportFragmentManager(),"LockDialog");
-        }
+            lockDialog.setArguments(bundle);
+            lockDialog.show(getActivity().getSupportFragmentManager(), "LockDialog");
+        } else if (item.getItemId() == R.id.delete) {
+            sync();
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+            notesToDelete = info.position;
 
+            //            Title Remove
+            title.remove(notesToDelete);
+            String size = Integer.toString(title.size());
+            for (int i = 0; i < title.size(); i++) {
+                DatabaseReference syncTitle = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id).child("note").child("title");
+                String user_title = title.get(i);
+                try {
+                    String encrypted = AESCrypt.encrypt(user_id, user_title);
+                    syncTitle = syncTitle.child(String.valueOf(i));
+                    syncTitle.setValue(encrypted);
+                } catch (GeneralSecurityException e) {
+                    e.printStackTrace();
+                }
+            }
+            DatabaseReference syncDeleteTittle = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id).child("note");
+            syncDeleteTittle.child("title").child(size).removeValue();
+
+            //            Note Remove
+            note.remove(notesToDelete);
+            size = Integer.toString(note.size());
+            for (int i = 0; i < note.size(); i++) {
+                DatabaseReference syncNote = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id).child("note").child("notes");
+                String user_input = note.get(i);
+                try {
+                    String encrypted = AESCrypt.encrypt(user_id, user_input);
+                    syncNote = syncNote.child(String.valueOf(i));
+                    syncNote.setValue(encrypted);
+                } catch (GeneralSecurityException e) {
+                    e.printStackTrace();
+                }
+            }
+            DatabaseReference syncDeleteNote = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id).child("note");
+            syncDeleteNote.child("notes").child(size).removeValue();
+            try {
+                //            Lock Remove
+                lock.remove(notesToDelete);
+                size = Integer.toString(lock.size());
+                for (int i = 0; i < lock.size(); i++) {
+                    DatabaseReference syncPassword = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id).child("note").child("lock").child("password");
+                    String user_input = lock.get(i);
+                    try {
+                        String encrypted = AESCrypt.encrypt(user_id, user_input);
+                        syncPassword = syncPassword.child(String.valueOf(i));
+                        syncPassword.setValue(encrypted);
+                    } catch (GeneralSecurityException e) {
+                        e.printStackTrace();
+                    }
+                }
+                DatabaseReference syncDeletePassword = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id).child("note").child("lock");
+                syncDeletePassword.child("password").child(size).removeValue();
+
+                //            Status Remove
+                status.remove(notesToDelete);
+                size = Integer.toString(status.size());
+                for (int i = 0; i < status.size(); i++) {
+                    DatabaseReference syncPassword = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id).child("note").child("lock").child("status");
+                    String user_input = status.get(i);
+                    syncPassword = syncPassword.child(String.valueOf(i));
+                    syncPassword.setValue(user_input);
+                }
+                DatabaseReference syncPassword = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id).child("note").child("lock");
+                syncPassword.child("status").child(size).removeValue();
+                Toasty.success(getActivity().getApplicationContext(), "Success Delete Notes", Toasty.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Toasty.success(getActivity().getApplicationContext(), "Success Delete Notes", Toasty.LENGTH_SHORT).show();
+            }
+        }
         return super.onContextItemSelected(item);
     }
 
-    @Override
-    public void sendInput(String input) {
-        lockpass = input;
-        System.out.println(lockpass);
-        DatabaseReference syncPassword = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id).child("note");
-        if (status.isEmpty()) {
-            for (int i = 0; i < title.size(); i++) {
-                if (i == notesToLock) {
-                    syncPassword.child("lock").child("password").child(String.valueOf(i)).setValue(lockpass);
-                    syncPassword.child("lock").child("status").child(String.valueOf(i)).setValue("locked");
-                } else {
-                    syncPassword.child("lock").child("password").child(String.valueOf(i)).setValue("0");
-                    syncPassword.child("lock").child("status").child(String.valueOf(i)).setValue("unlocked");
+    public void sync() {
+        DatabaseReference userDataLock = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id).child("note").child("lock");
+        userDataLock.child("status").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                status.clear();
+                for (DataSnapshot ds: snapshot.getChildren()) {
+                    status.add(ds.getValue(String.class));
                 }
             }
-        } else {
-            for (int i = 0; i < title.size(); i++) {
-                try {
-                    String condition = status.get(i);
-                    if (i == notesToLock && status.get(i).equals("locked")) {
-                        Toasty.warning(getActivity().getApplicationContext(), "This Note Already Locked", Toasty.LENGTH_SHORT).show();
-                    } else if (i == notesToLock && status.get(i).equals("unlocked")) {
-                        syncPassword.child("lock").child("password").child(String.valueOf(i)).setValue(lockpass);
-                        syncPassword.child("lock").child("status").child(String.valueOf(i)).setValue("locked");
-                    } else if (condition.equals("locked")) {
-                        continue;
-                    } else {
-                        syncPassword.child("lock").child("password").child(String.valueOf(i)).setValue("0");
-                        syncPassword.child("lock").child("status").child(String.valueOf(i)).setValue("unlocked");
-                    }
-                } catch (Exception e){
-                    if (i == notesToLock){
-                        syncPassword.child("lock").child("password").child(String.valueOf(i)).setValue(lockpass);
-                        syncPassword.child("lock").child("status").child(String.valueOf(i)).setValue("locked");
-                    }else{
-                        syncPassword.child("lock").child("password").child(String.valueOf(i)).setValue("0");
-                        syncPassword.child("lock").child("status").child(String.valueOf(i)).setValue("unlocked");
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
+
+        DatabaseReference userDataPassword = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id).child("note");
+        userDataPassword.child("lock").child("password").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                lock.clear();
+                for (DataSnapshot ds: snapshot.getChildren()) {
+                    String value = ds.getValue(String.class);
+                    String decode = null;
+                    try {
+                        decode = AESCrypt.decrypt(user_id, value);
+                        lock.add(decode);
+                    } catch (GeneralSecurityException e) {
+                        e.printStackTrace();
                     }
                 }
             }
-        }
-    }
 
-    @Override
-    public void unlockinginput(String input) {
-        unlockPass = input;
-        System.out.println(positionx);
-        if(unlockPass.equals(lock.get(positionx))){
-            Intent intent = new Intent(getActivity().getApplicationContext(), NoteEditor.class);
-            intent.putExtra("notedId", positionx);
-            startActivity(intent);
-        }else{
-            Toasty.warning(getActivity().getApplicationContext(),"Wrong Password",Toasty.LENGTH_SHORT).show();
-        }
-    }
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
 
+            }
+        });
+    }
 }

@@ -29,11 +29,11 @@ import es.dmoral.toasty.Toasty;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    EditText edtusername,edtemail,edtpassword1,edtpassword2;
+    EditText edtusername, edtemail, edtpassword1, edtpassword2;
     Button btnregister;
     FirebaseAuth fAuth;
     Switch swtch;
-    String uid,username;
+    String uid, username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,11 +54,10 @@ public class RegisterActivity extends AppCompatActivity {
         swtch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
                     edtpassword1.setTransformationMethod(null);
                     edtpassword2.setTransformationMethod(null);
-                }
-                else{
+                } else {
                     edtpassword1.setTransformationMethod(new PasswordTransformationMethod());
                     edtpassword2.setTransformationMethod(new PasswordTransformationMethod());
                 }
@@ -71,32 +70,31 @@ public class RegisterActivity extends AppCompatActivity {
                 String email;
                 String password1;
                 String password2;
-                if(edtusername.getText().toString().trim().isEmpty() || edtemail.getText().toString().trim().isEmpty() || edtpassword1.getText().toString().trim().isEmpty() || edtpassword2.getText().toString().trim().isEmpty()){
+                if (edtusername.getText().toString().trim().isEmpty() || edtemail.getText().toString().trim().isEmpty() || edtpassword1.getText().toString().trim().isEmpty() || edtpassword2.getText().toString().trim().isEmpty()) {
                     edtemail.setText("");
                     edtpassword1.setText("");
                     edtpassword2.setText("");
                     edtusername.setText("");
                     Toasty.warning(RegisterActivity.this, "Please Input All Field", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     username = edtusername.getText().toString().trim();
                     email = edtemail.getText().toString().trim();
                     password1 = edtpassword1.getText().toString().trim();
                     password2 = edtpassword2.getText().toString().trim();
-                    if(!password1.equals(password2)){
+                    if (!password1.equals(password2)) {
                         edtusername.setText("");
                         edtemail.setText("");
                         edtpassword1.setText("");
                         edtpassword2.setText("");
                         Toasty.warning(RegisterActivity.this, "Password Not Equals", Toast.LENGTH_SHORT).show();
-                    }
-                    else{
-                        fAuth.createUserWithEmailAndPassword(email,password1).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    } else {
+                        fAuth.createUserWithEmailAndPassword(email, password1).addOnCompleteListener(new OnCompleteListener < AuthResult > () {
                             @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if(task.isSuccessful()) {
+                            public void onComplete(@NonNull Task < AuthResult > task) {
+                                if (task.isSuccessful()) {
                                     FirebaseUser user = fAuth.getCurrentUser();
 
-                                    user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener < Void > () {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             Toasty.success(RegisterActivity.this, "Verification Email Has Been Sent", Toast.LENGTH_SHORT).show();
@@ -115,9 +113,8 @@ public class RegisterActivity extends AppCompatActivity {
                                     usertype = usertype.child("type");
                                     usertype.setValue("Free");
                                     Toasty.success(RegisterActivity.this, "Register Succesfully", Toast.LENGTH_SHORT).show();
-                                    startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
-                                }
-                                else{
+                                    startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                                } else {
                                     Toasty.error(RegisterActivity.this, "Error", Toast.LENGTH_SHORT).show();
                                     edtusername.setText("");
                                     edtemail.setText("");

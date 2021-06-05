@@ -14,30 +14,85 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.scottyab.aescrypt.AESCrypt;
+
 import org.jetbrains.annotations.NotNull;
 
-public class LockDialog extends DialogFragment {
+import java.security.GeneralSecurityException;
 
-    public interface OnInputSelected{
-        void sendInput(String input);
-    }
-    public OnInputSelected m0nInputSelected;
+import es.dmoral.toasty.Toasty;
+
+import static com.example.notepadlocker.MainActivity.user_id;
+
+public class LockDialog extends DialogFragment {
 
     @Nullable
     @org.jetbrains.annotations.Nullable
     @Override
-    public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState)
-    {
-        View view = inflater.inflate(R.layout.custompopup,container,false);
+    public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.custompopup, container, false);
         TextView text = view.findViewById(R.id.txtcondition);
         text.setText("Uncloked");
         EditText edtpass = view.findViewById(R.id.edtnotepassword);
         Button btnlock = view.findViewById(R.id.btnunlock);
+        Bundle bundle = this.getArguments();
+        String position = bundle.getString("position");
+
         btnlock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String input = edtpass.getText().toString().trim();
-                m0nInputSelected.sendInput(input);
+                String lockpass = edtpass.getText().toString().trim();
+                String plaintext = lockpass;
+                try {
+                    lockpass = AESCrypt.encrypt(user_id,lockpass);
+                } catch (GeneralSecurityException e) {
+                    e.printStackTrace();
+                }
+                String nopass = "0";
+                try {
+                    nopass = AESCrypt.encrypt(user_id,nopass);
+                } catch (GeneralSecurityException e){
+                    e.printStackTrace();
+                }
+                DatabaseReference syncPassword = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id).child("note");
+                if (NoteFragment.status.isEmpty()) {
+                    for (int i = 0; i < NoteFragment.title.size(); i++) {
+                        if (i == Integer.parseInt(position)) {
+                            syncPassword.child("lock").child("password").child(String.valueOf(i)).setValue(lockpass);
+                            syncPassword.child("lock").child("status").child(String.valueOf(i)).setValue("locked");
+                        } else {
+                            syncPassword.child("lock").child("password").child(String.valueOf(i)).setValue(nopass);
+                            syncPassword.child("lock").child("status").child(String.valueOf(i)).setValue("unlocked");
+                        }
+                    }
+                } else {
+                    for (int i = 0; i < NoteFragment.title.size(); i++) {
+                        try {
+                            String condition = NoteFragment.status.get(i);
+                            if (i == Integer.parseInt(position) && NoteFragment.status.get(i).equals("locked")) {
+                                Toasty.warning(getActivity().getApplicationContext(), "This Note Already Locked", Toasty.LENGTH_SHORT).show();
+                            } else if (i == Integer.parseInt(position) && NoteFragment.status.get(i).equals("unlocked")) {
+                                syncPassword.child("lock").child("password").child(String.valueOf(i)).setValue(lockpass);
+                                syncPassword.child("lock").child("status").child(String.valueOf(i)).setValue("locked");
+                            } else if (condition.equals("locked")) {
+                                continue;
+                            } else {
+                                syncPassword.child("lock").child("password").child(String.valueOf(i)).setValue(nopass);
+                                syncPassword.child("lock").child("status").child(String.valueOf(i)).setValue("unlocked");
+                            }
+                        } catch (Exception e) {
+                            if (i == Integer.parseInt(position)) {
+                                syncPassword.child("lock").child("password").child(String.valueOf(i)).setValue(lockpass);
+                                syncPassword.child("lock").child("status").child(String.valueOf(i)).setValue("locked");
+                            } else {
+                                syncPassword.child("lock").child("password").child(String.valueOf(i)).setValue(nopass);
+                                syncPassword.child("lock").child("status").child(String.valueOf(i)).setValue("unlocked");
+                            }
+                        }
+                    }
+                }
                 getDialog().dismiss();
             }
         });
@@ -45,17 +100,7 @@ public class LockDialog extends DialogFragment {
     }
 
     public void onResume() {
-        getDialog().getWindow().setLayout(1000, 1000);
+        getDialog().getWindow().setLayout(750, 750);
         super.onResume();
-    }
-
-    @Override
-    public void onAttach(@NonNull @NotNull Context context) {
-        super.onAttach(context);
-        try{
-            m0nInputSelected = (OnInputSelected) getTargetFragment();
-        } catch (ClassCastException e){
-            e.printStackTrace();
-        }
     }
 }

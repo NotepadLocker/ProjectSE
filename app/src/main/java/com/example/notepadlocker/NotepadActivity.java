@@ -34,6 +34,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.scottyab.aescrypt.AESCrypt;
 
 import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.Text;
 
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
@@ -64,20 +65,38 @@ public class NotepadActivity extends AppCompatActivity implements NavigationView
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new NoteFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NoteFragment()).commit();
         naview.setCheckedItem(R.id.notes);
+
+        View headerView = naview.getHeaderView(0);
+        TextView navUsername = (TextView) headerView.findViewById(R.id.txtviewnickname);
+        TextView navStatus = (TextView) headerView.findViewById(R.id.txtviewstatus);
+
+        DatabaseReference username = FirebaseDatabase.getInstance().getReference().child("Users").child(user_id).child("userdata");
+        username.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull @NotNull DataSnapshot snapshot) {
+                navUsername.setText(snapshot.child("username").getValue(String.class));
+                navStatus.setText(snapshot.child("type").getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(@NonNull @NotNull DatabaseError error) {
+
+            }
+        });
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull @NotNull MenuItem item) {
-        if(item.getItemId() == R.id.notes){
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new NoteFragment()).commit();
-        }else if(item.getItemId() == R.id.recycle){
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,new RecycleBinFragment()).commit();
-        }else if(item.getItemId() == R.id.singout){
-            SharedPreferences sharedPreferences = getSharedPreferences("Session",MODE_PRIVATE);
+    public boolean onNavigationItemSelected(@NonNull@NotNull MenuItem item) {
+        if (item.getItemId() == R.id.notes) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new NoteFragment()).commit();
+        } else if (item.getItemId() == R.id.recycle) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new RecycleBinFragment()).commit();
+        } else if (item.getItemId() == R.id.singout) {
+            SharedPreferences sharedPreferences = getSharedPreferences("Session", MODE_PRIVATE);
             sharedPreferences.edit().clear().commit();
-            Intent intent = new Intent(NotepadActivity.this,MainActivity.class);
+            Intent intent = new Intent(NotepadActivity.this, MainActivity.class);
             startActivity(intent);
         }
 
@@ -87,9 +106,9 @@ public class NotepadActivity extends AppCompatActivity implements NavigationView
 
     @Override
     public void onBackPressed() {
-        if(drawerLayout.isDrawerOpen(GravityCompat.START)){
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        }else{
+        } else {
             super.onBackPressed();
         }
     }
