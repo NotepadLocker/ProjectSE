@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.scottyab.aescrypt.AESCrypt;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.security.GeneralSecurityException;
@@ -34,17 +35,23 @@ public class LockDialog extends DialogFragment {
     public View onCreateView(@NonNull @NotNull LayoutInflater inflater, @Nullable @org.jetbrains.annotations.Nullable ViewGroup container, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.custompopup, container, false);
         TextView text = view.findViewById(R.id.txtcondition);
-        text.setText("Uncloked");
-        EditText edtpass = view.findViewById(R.id.edtnotepassword);
-        Button btnlock = view.findViewById(R.id.btnunlock);
         Bundle bundle = this.getArguments();
         String position = bundle.getString("position");
+        EditText edtpass = view.findViewById(R.id.edtnotepassword);
+        Button btnlock = view.findViewById(R.id.btnunlock);
+        try {
+            String status = NoteFragment.status.get(Integer.parseInt(position));
+            status = StringUtils.capitalize(status);
+            text.setText(status);
+        } catch (Exception e){
+            text.setText("Unlocked");
+        }
+
 
         btnlock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String lockpass = edtpass.getText().toString().trim();
-                String plaintext = lockpass;
                 try {
                     lockpass = AESCrypt.encrypt(user_id,lockpass);
                 } catch (GeneralSecurityException e) {
@@ -100,7 +107,7 @@ public class LockDialog extends DialogFragment {
     }
 
     public void onResume() {
-        getDialog().getWindow().setLayout(750, 750);
+        getDialog().getWindow().setLayout(850, 850);
         super.onResume();
     }
 }

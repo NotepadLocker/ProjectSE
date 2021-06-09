@@ -261,7 +261,6 @@ public class NoteFragment extends Fragment {
         if (item.getItemId() == R.id.Lock) {
             AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
             notesToLock = info.position;
-            System.out.println(notesToDelete);
             Bundle bundle = new Bundle();
             bundle.putString("position", String.valueOf(notesToLock));
             LockDialog lockDialog = new LockDialog();

@@ -12,14 +12,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView"
-        android:textSize="32dp"/>
+        android:textAlignment="center"
+        android:textSize="32dp" />
 
     <EditText
         android:id="@+id/edtnotepassword"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:textAlignment="center" />
 
     <Button
         android:id="@+id/btnunlock"

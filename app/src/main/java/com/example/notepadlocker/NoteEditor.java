@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
@@ -20,6 +21,7 @@ import static com.example.notepadlocker.MainActivity.user_id;
 
 public class NoteEditor extends AppCompatActivity {
 
+    Button btnsave;
     EditText edtnote;
     EditText edttitle;
     String titlex = null;
@@ -32,6 +34,8 @@ public class NoteEditor extends AppCompatActivity {
         setContentView(R.layout.activity_note_editor);
 
         getSupportActionBar().hide();
+
+        btnsave = findViewById(R.id.btnsave);
 
         edtnote = findViewById(R.id.edtnoteeditor);
         edttitle = findViewById(R.id.edttitle);
@@ -100,6 +104,13 @@ public class NoteEditor extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
 
+            }
+        });
+        btnsave.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(NoteEditor.this,NotepadActivity.class);
+                startActivity(intent);
             }
         });
     }
