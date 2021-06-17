@@ -8,12 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import org.jetbrains.annotations.NotNull;
+import org.w3c.dom.Text;
 
 import es.dmoral.toasty.Toasty;
 
@@ -27,6 +29,8 @@ public class UnlockDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.custompopuptrue,container,false);
         EditText edtunlocking = view.findViewById(R.id.edtunlocking);
         Button btnunlocking = view.findViewById(R.id.btnunlocking);
+        TextView text = view.findViewById(R.id.txtcondition);
+        text.setText("Locked");
         Bundle bundle = this.getArguments();
         String position = bundle.getString("position");
 
@@ -41,6 +45,7 @@ public class UnlockDialog extends DialogFragment {
                     getDialog().dismiss();
                     startActivity(intent);
                 }else{
+                    edtunlocking.setText("");
                     Toasty.warning(getActivity().getApplicationContext(),"Wrong Password",Toasty.LENGTH_SHORT).show();
                 }
             }
@@ -49,7 +54,7 @@ public class UnlockDialog extends DialogFragment {
     }
 
     public void onResume() {
-        getDialog().getWindow().setLayout(750, 750);
+        getDialog().getWindow().setLayout(1000, 650);
         super.onResume();
     }
 }

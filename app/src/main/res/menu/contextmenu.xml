@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/Lock"
-        android:title="Lock" />
+        android:title="Lock / Change Password" />
 
     <item
         android:id="@+id/delete"

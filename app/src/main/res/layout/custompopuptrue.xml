@@ -1,29 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="350dp"
     android:layout_height="475dp"
-    android:background="@color/welcome"
-    android:padding="5dp"
-    android:layout_gravity="center">
+    android:layout_gravity="center"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:padding="5dp">
 
     <TextView
         android:id="@+id/txtcondition"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView"
-        android:textAlignment="center" />
+        android:layout_marginBottom="50px"
+        android:textAlignment="center"
+        android:textSize="32dp" />
 
     <EditText
         android:id="@+id/edtunlocking"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="75px"
+        android:background="@drawable/borderregister"
         android:ems="10"
-        android:inputType="textPassword" />
+        android:hint="Enter A Password"
+        android:inputType="textPassword"
+        android:padding="20px"
+        android:textAlignment="center" />
 
     <Button
         android:id="@+id/btnunlocking"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:background="@drawable/btnregister"
+        android:text="Unlock Notes"
+        android:theme="@style/RegisterColor" />
 </LinearLayout>

@@ -36,6 +36,13 @@
         <item name="android:itemTextAppearance">@color/welcome</item>
     </style>
 
+    <!--White-->
+    <style name="WhiteColor" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/white</item>
+        <item name="android:statusBarColor">@color/white</item>
+        <item name="colorSecondary">@color/white</item>
+    </style>
+
     <style name="FullScreenDialog" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:windowNoTitle">true</item>
