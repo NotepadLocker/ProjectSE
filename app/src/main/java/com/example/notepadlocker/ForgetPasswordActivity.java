@@ -45,6 +45,7 @@ public class ForgetPasswordActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ForgetPasswordActivity.this,MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
         });
@@ -62,6 +63,7 @@ public class ForgetPasswordActivity extends AppCompatActivity {
                         public void onSuccess(Void unused) {
                             Toasty.success(ForgetPasswordActivity.this, "Email Send Success", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(ForgetPasswordActivity.this, LoginActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                         }
                     }).addOnFailureListener(new OnFailureListener() {

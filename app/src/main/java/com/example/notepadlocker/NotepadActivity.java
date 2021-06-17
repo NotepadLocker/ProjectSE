@@ -8,6 +8,9 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -111,6 +114,12 @@ public class NotepadActivity extends AppCompatActivity implements NavigationView
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
         } else if (item.getItemId() == R.id.Upgrade){
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new UpgradeFragment()).commit();
+        } else if (item.getItemId() == R.id.email){
+            ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clipData = ClipData.newPlainText("EditText","notepadlocker@gmail.com");
+            clipboardManager.setPrimaryClip(clipData);
+            clipData.getDescription();
+            Toasty.success(NotepadActivity.this,"Email Copied",Toasty.LENGTH_SHORT).show();
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -122,7 +131,10 @@ public class NotepadActivity extends AppCompatActivity implements NavigationView
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         }
     }
 }
