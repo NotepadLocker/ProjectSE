@@ -10,6 +10,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.MenuInflater;
@@ -98,6 +99,18 @@ public class NotepadActivity extends AppCompatActivity implements NavigationView
             sharedPreferences.edit().clear().commit();
             Intent intent = new Intent(NotepadActivity.this, MainActivity.class);
             startActivity(intent);
+        } else if (item.getItemId() == R.id.github){
+            Uri uri = Uri.parse("https://github.com/NotepadLocker");
+            Intent github = new Intent(Intent.ACTION_VIEW,uri);
+            startActivity(github);
+        } else if (item.getItemId() == R.id.instagram){
+            Uri uri = Uri.parse("https://www.instagram.com/notepadlocker/");
+            Intent instagram = new Intent(Intent.ACTION_VIEW,uri);
+            startActivity(instagram);
+        } else if (item.getItemId() == R.id.profile){
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new ProfileFragment()).commit();
+        } else if (item.getItemId() == R.id.Upgrade){
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new UpgradeFragment()).commit();
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);

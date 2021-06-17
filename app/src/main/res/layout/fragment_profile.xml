@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/welcome"
+    tools:context=".ProfileFragment">
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="95dp"
+        android:layout_height="105dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="500px"
+        android:src="@drawable/ic_baseline_person_login" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="250px"
+        android:layout_marginLeft="100px"
+        android:layout_marginRight="100px"
+        android:background="@drawable/btnwhite"
+        android:text="Change Username"
+        android:textColor="#0E0E0E"
+        android:theme="@style/WhiteColor" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="75px"
+        android:layout_marginLeft="100px"
+        android:layout_marginRight="100px"
+        android:background="@drawable/btnwhite"
+        android:text="Reset Password"
+        android:textColor="#0C0C0C"
+        android:theme="@style/WhiteColor" />
+</FrameLayout>

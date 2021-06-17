@@ -1,16 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:tools="http://schemas.android.com/tools"
+<menu
+    xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     tools:ignore="MissingDefaultResource">
-
     <group android:checkableBehavior="single">
-        <item android:id="@+id/notes"
-            android:title="Note"/>
-
-        <item android:id="@+id/recycle"
+        <item
+            android:id="@+id/notes"
+            android:icon="@drawable/ic_notesicon"
+            android:title="Note" />
+        <item
+            android:id="@+id/recycle"
+            android:icon="@drawable/ic_recycle"
             android:title="Recycle Bin" />
-
-        <item android:id="@+id/singout"
-            android:title="@string/singout" />
     </group>
+    <item android:title="Profile">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/profile"
+                    android:icon="@drawable/ic_personicon"
+                    android:title="Profile" />
+                <item
+                    android:id="@+id/Upgrade"
+                    android:icon="@drawable/ic_upgrade"
+                    android:title="Upgrade" />
+            </group>
+        </menu>
+    </item>
+    <group android:checkableBehavior="single">
+        <item android:title="Contact Person">
+            <menu>
+                <item
+                    android:id="@+id/email"
+                    android:icon="@android:drawable/ic_dialog_email"
+                    android:title="notepadlocker@gmail.com" />
+                <item
+                    android:id="@+id/github"
+                    android:icon="@drawable/ic_github"
+                    android:title="Github" />
+                <item
+                    android:id="@+id/instagram"
+                    android:icon="@drawable/ic_instagram"
+                    android:title="Instagram" />
+            </menu>
+        </item>
+    </group>
+    <item android:title="Sign Out">
+        <menu>
+            <item
+                android:id="@+id/singout"
+                android:icon="@drawable/ic_logout"
+                android:title="@string/singout" />
+        </menu>
+    </item>
 </menu>

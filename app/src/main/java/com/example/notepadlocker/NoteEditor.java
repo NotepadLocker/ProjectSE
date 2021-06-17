@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -21,7 +22,7 @@ import static com.example.notepadlocker.MainActivity.user_id;
 
 public class NoteEditor extends AppCompatActivity {
 
-    Button btnsave;
+    ImageView btnsave;
     EditText edtnote;
     EditText edttitle;
     String titlex = null;
@@ -35,7 +36,7 @@ public class NoteEditor extends AppCompatActivity {
 
         getSupportActionBar().hide();
 
-        btnsave = findViewById(R.id.btnsave);
+        btnsave = findViewById(R.id.bakcbutton);
 
         edtnote = findViewById(R.id.edtnoteeditor);
         edttitle = findViewById(R.id.edttitle);
